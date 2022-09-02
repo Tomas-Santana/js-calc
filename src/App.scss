@@ -104,9 +104,12 @@ $accent: #fe3737;
     font-size: 20px;
     background-color: white;
     border: 1px solid grey;
+    transition: .1s ease;
     &:active {
       background-color: $accent;
       color: white;
+      font-size: 18px;
+      box-shadow: inset 5px 5px rgba(0,0,0,0.5);
     }
   }
 
@@ -121,9 +124,5 @@ $accent: #fe3737;
   }
   #display-text {
     text-align: left;
-  }
-  #result-text {
-    text-align: right;
-    color: $accent;
   }
 }

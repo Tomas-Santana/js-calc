@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.scss';
 import React from 'react';
 
@@ -11,7 +10,7 @@ const buttons = [
   },
   {
     id: 'delete',
-    display: <i className="fa-solid fa-delete-left"></i>,
+    display: 'D',
     value: 'delete', 
   },
   {
@@ -36,7 +35,7 @@ const buttons = [
   },
   {
     id: 'multiply',
-    display: 'X',
+    display: 'x',
     value: '*',
   },
   {
@@ -95,6 +94,7 @@ const buttons = [
     value: '=',
   },
 ];
+const operators = ['+', '-', '*', '/'];
 
 class App extends React.Component {
   constructor(props){
@@ -106,12 +106,15 @@ class App extends React.Component {
     this.updateDisplay = this.updateDisplay.bind(this);
   }
   updateDisplay(value){
+    // clear
     if (value === 'clear'){
       this.setState({
         display: '0',
         result: '0',
       })
     }
+
+    // delete
     else if (value === 'delete') {
       if (this.state.display.length > 1){
         this.setState({
@@ -125,12 +128,46 @@ class App extends React.Component {
       }
 
     }
+    //zeros
+    else if (value == '0') {
+      if (this.state.display == '0') {
+        return;
+      }
+      else {
+        this.setState({
+          display: this.state.display + value,
+        })
+      }
+    }
+    // decimal
+    else if (value == '.') {
+      if (this.state.display.includes('.')) return;
+      else {
+        this.setState({
+          display: this.state.display + value,
+        })
+      }
+    }
+    // operators
+    else if (operators.includes(value)) {
+      if (value == "-") {
+        if (this.state.display.endsWith("--")) return;
+        else {
+          this.setState({
+            display: this.state.display + value,
+          })
+        }
+      }
+    }
+    // evaulate
     else if (value === '=') {
       this.setState({
-        result: eval(this.state.display),
-        display: eval(this.state.display),
+        result: Math.round(eval(this.state.display) * 100000000) / 100000000,
+        display: Math.round(eval(this.state.display) * 100000000) / 100000000,
       })
     }
+
+    // numbers
     else if (this.state.display === '0') {
       this.setState({
         display: value,
@@ -148,7 +185,6 @@ class App extends React.Component {
       <div id="calc-wrapper">
         <div id="displays">
           <div id="display"><h2 className='calc-text' id="display-text">{this.state.display}</h2></div>
-          <h2 className='calc-text' id="result-text">{this.state.result}</h2>
         </div>
         <br/>
         <div id="buttons">
