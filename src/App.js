@@ -101,86 +101,68 @@ class App extends React.Component {
     super(props);
     this.state = {
       display: '0',
-      result: '0',
+      formula: '0',
+      numbers: []
     }
     this.updateDisplay = this.updateDisplay.bind(this);
+    this.handleDecimals = this.handleDecimals.bind(this);
+    this.handleOperators = this.handleOperators.bind(this)
   }
-  updateDisplay(value){
-    // clear
-    if (value === 'clear'){
+  updateDisplay(value) {
+    if (value === 'clear') {
       this.setState({
         display: '0',
-        result: '0',
+        numbers: [],
       })
     }
-
-    // delete
-    else if (value === 'delete') {
-      if (this.state.display.length > 1){
-        this.setState({
-          display: this.state.display.slice(0, -1),
-        })
-      }
-      else {
+    else if (value === "delete") {
+      if (this.state.display.toString().length === 1) {
         this.setState({
           display: '0',
+          numbers: []
         })
       }
-
-    }
-    //zeros
-    else if (value == '0') {
-      if (this.state.display == '0') {
-        return;
-      }
-      else {
-        this.setState({
-          display: this.state.display + value,
-        })
-      }
-    }
-    // decimal
-    else if (value == '.') {
-      if (this.state.display.includes('.')) return;
-      else {
-        this.setState({
-          display: this.state.display + value,
-        })
-      }
-    }
-    // operators
-    else if (operators.includes(value)) {
-      if (value == "-") {
-        if (this.state.display.endsWith("--")) return;
-        else {
-          this.setState({
-            display: this.state.display + value,
-          })
-        }
-      }
-    }
-    // evaulate
-    else if (value === '=') {
-      this.setState({
-        result: Math.round(eval(this.state.display) * 100000000) / 100000000,
-        display: Math.round(eval(this.state.display) * 100000000) / 100000000,
+      else this.setState({
+        display: this.state.display.slice(0,-1),
+        numbers: this.state.display.split("+")
       })
     }
-
-    // numbers
     else if (this.state.display === '0') {
       this.setState({
-        display: value,
+        display: value.toString(),
+        numbers: this.state.display.split("+")
       })
     }
-    else {
+    else if (value === '.') {
+      const lastIndex = this.state.numbers.length - 1;
+      if (this.state.numbers[lastIndex].includes(".") || this.state.display.endsWith(".")) return;
       this.setState({
-        display: this.state.display + String(value),
+        display: this.state.display + value,
       })
     }
+    else if (value === "=") {
+      this.setState({
+        display: eval(this.state.display).toString(),
+      })
+      console.log(this.state.display)
+    }
+    else this.setState({
+      display: this.state.display + value.toString(),
+    })
   }
+  
+  handleOperators(value) {
+    this.setState({
+      numbers: this.state.display.split("+")
+    })
+    console.log(this.state.numbers)
+  }
+  handleDecimals(value) {
+    return;
+  }
+  
   render() {
-
+    this.state.numbers = this.state.display.split(/[+-]/);
     return (
       <div id="calc-wrapper">
         <div id="displays">
