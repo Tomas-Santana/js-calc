@@ -109,6 +109,10 @@ class App extends React.Component {
     this.handleOperators = this.handleOperators.bind(this)
   }
   updateDisplay(value) {
+    if (operators.includes(value)) {
+      this.handleOperators(value);
+      return;
+    }
     if (value === 'clear') {
       this.setState({
         display: '0',
@@ -146,17 +150,43 @@ class App extends React.Component {
       })
       console.log(this.state.display)
     }
-    else this.setState({
+    else {
+      this.setState({
       display: this.state.display + value.toString(),
+      
+      
     })
+    console.log("nono");
+    }
+    
   }
   
   handleOperators(value) {
-    this.setState({
-      numbers: this.state.display.split("+")
-    })
-    console.log(this.state.numbers)
-  }
+    let lastChar = this.state.display.slice(-1);
+    console.log(lastChar)
+    if (operators.includes(lastChar)) {
+      if (lastChar === "-" && value === "-") {
+        console.log("heeereee")
+        this.setState({
+        display: this.state.display.slice(0,-1) + "+",
+      })
+      }
+      else if (lastChar === "+" && value === "-") {
+        this.setState({
+        display: this.state.display.slice(0,-1) + value,
+      })
+      }
+      else if (value === "-") {
+        this.setState({
+        display: this.state.display + value,
+      })
+      }
+      else this.setState({
+        display: this.state.display.slice(0,-1) + value,
+      })
+    }
+    else this.setState({display:this.state.display+value});
+}
   handleDecimals(value) {
     return;
   }
