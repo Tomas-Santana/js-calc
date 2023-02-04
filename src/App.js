@@ -96,6 +96,19 @@ const buttons = [
 ];
 const operators = ['+', '-', '*', '/'];
 
+
+
+function decimalPlaces(num) {
+  var match = (''+num).match(/(?:\.(\d+))$/);
+  if (!match) { return 0; }
+  return Math.max(
+       0,
+       // Number of digits right of decimal point.
+       (match[1] ? match[1].length : 0)
+       // Adjust for scientific notation.
+       - (match[2] ? +match[2] : 0));
+}
+
 class App extends React.Component {
   constructor(props){
     super(props);
@@ -145,8 +158,13 @@ class App extends React.Component {
       })
     }
     else if (value === "=") {
+      let result = eval(this.state.display).toString();
+      if (decimalPlaces(result) > 6) {
+        result = parseFloat(parseFloat(result).toFixed(6)).toString();
+      }
+      
       this.setState({
-        display: eval(this.state.display).toString(),
+        display: result,
       })
       console.log(this.state.display)
     }
@@ -163,13 +181,19 @@ class App extends React.Component {
   
   handleOperators(value) {
     let lastChar = this.state.display.slice(-1);
-    console.log(lastChar)
+    let slChar = this.state.display.slice(-2,-1);
+    
     if (operators.includes(lastChar)) {
       if (lastChar === "-" && value === "-") {
-        console.log("heeereee")
+        
         this.setState({
         display: this.state.display.slice(0,-1) + "+",
       })
+      }
+      else if (slChar === "*" || slChar === "/") {
+        this.setState({
+          display: this.state.display.slice(0,-2) + value,
+        })
       }
       else if (lastChar === "+" && value === "-") {
         this.setState({
