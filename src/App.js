@@ -174,7 +174,7 @@ class App extends React.Component {
       
       
     })
-    console.log("nono");
+ 
     }
     
   }
@@ -216,7 +216,8 @@ class App extends React.Component {
   }
   
   render() {
-    this.state.numbers = this.state.display.split(/[+-]/);
+    // split on operators
+    this.state.numbers = this.state.display.split(/[-+*/]/);
     return (
       <div id="calc-wrapper">
         <div id="displays">
